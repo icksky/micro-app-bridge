@@ -22,7 +22,7 @@ export function useMicroApp(
 export function useMicroApp(options?: MicroAppOptions): MicroAppReturnType<EventCenterForMicroApp>
 export function useMicroApp(...params: [MicroAppOptions?] | [MicroApp, string, MicroAppOptions?]) {
   const [app, name, opt] = params as [MicroApp | EventCenterForMicroApp, string?, MicroAppOptions?]
-  let microApp: MicroApp | EventCenterForMicroApp = subMicroApp!
+  let microApp: MicroApp | EventCenterForMicroApp | undefined = subMicroApp
   let options: MicroAppOptions = {}
   let appName = ''
   if (isString(name)) {
@@ -69,7 +69,7 @@ export function useMicroApp(...params: [MicroAppOptions?] | [MicroApp, string, M
     listeners = null as never
     cacheData = null as never
     registered = null as never
-    runMicroOrBaseFunction(microApp, appName, microApp.removeDataListener, microAppListener)
+    runMicroOrBaseFunction(microApp, appName, microApp?.removeDataListener, microAppListener)
     microApp = null as never
   }
 
@@ -93,7 +93,9 @@ export function useMicroApp(...params: [MicroAppOptions?] | [MicroApp, string, M
         reject,
       } as CommunicationData
       // main or sub app
-      'setData' in microApp ? microApp.setData(appName, message) : microApp.dispatch(message)
+      microApp && 'setData' in microApp
+        ? microApp?.setData(appName, message)
+        : microApp?.dispatch(message)
     })
   }
 
@@ -102,7 +104,7 @@ export function useMicroApp(...params: [MicroAppOptions?] | [MicroApp, string, M
     result?.resolve()
   }
 
-  runMicroOrBaseFunction(microApp, appName, microApp.addDataListener, microAppListener, true)
+  runMicroOrBaseFunction(microApp, appName, microApp?.addDataListener, microAppListener, true)
 
   addEventListener(
     CMD_REGISGER,

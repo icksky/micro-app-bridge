@@ -2,12 +2,12 @@ import type { EventCenterForMicroApp } from '@micro-zoe/micro-app'
 import { CommunicationData, Listener, MicroApp } from './micro-app'
 
 export function runMicroOrBaseFunction<T extends (...args: any[]) => any>(
-  app: MicroApp | EventCenterForMicroApp,
+  app: MicroApp | EventCenterForMicroApp | undefined,
   name: string,
-  fn: T,
+  fn?: T,
   ...rest: Parameters<T>
 ) {
-  return fn.apply(app, name ? [name, ...rest] : rest)
+  return fn?.apply(app, name ? [name, ...rest] : rest)
 }
 
 export function runListenerFn(fn: Listener['fn'], data: CommunicationData) {

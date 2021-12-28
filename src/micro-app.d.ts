@@ -7,7 +7,7 @@ export interface MicroAppOptions {
 }
 
 export interface MicroAppReturnType<T extends MicroApp | EventCenterForMicroApp> {
-  microApp: T
+  microApp: T | undefined
   addEventListener: (
     eventName: string,
     fn: Listener['fn'],
